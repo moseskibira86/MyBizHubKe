@@ -1,0 +1,752 @@
+import {
+  BusinessTenant,
+  Sale,
+  Expense,
+  Invoice,
+  Customer,
+  Product,
+  Supplier,
+  ComplianceTask,
+  NewsArticle,
+  TrainingCourse,
+  Opportunity,
+  MessageTemplate,
+  BusinessScoreBreakdown,
+} from '../types';
+
+export const DEMO_TENANT: BusinessTenant = {
+  id: 'tenant-mama-njeri-01',
+  name: 'Mama Njeri Supplies & Hardware',
+  ownerName: 'Mary Njeri Waweru',
+  email: 'njeri@mamanjerisupplies.co.ke',
+  phone: '+254 722 890 123',
+  county: 'Nairobi',
+  category: 'Retail / Duka',
+  employeeCount: '5 - 10',
+  monthlySalesRange: 'KSh 250,000 - 500,000',
+  kraPin: 'P051289341Z',
+  mpesaTill: '892104',
+  plan: 'Business',
+  isTrial: true,
+  trialDaysLeft: 5,
+  currency: 'KSh',
+  isDemo: true,
+  score: 72,
+};
+
+export const INITIAL_SALES: Sale[] = [
+  {
+    id: 'sale-101',
+    customerName: 'Juma Omondi (Apex Plumbers)',
+    customerPhone: '+254 711 445 221',
+    itemsSummary: 'Bamburi Cement 50kg (15 bags), PVC Pipes 4"',
+    amount: 19800,
+    paymentMethod: 'M-Pesa',
+    date: '2026-09-20',
+    status: 'Completed',
+  },
+  {
+    id: 'sale-102',
+    customerName: 'Amina Hassan',
+    customerPhone: '+254 733 982 101',
+    itemsSummary: 'Dulux Emulsion Paint Brilliant White 20L',
+    amount: 8600,
+    paymentMethod: 'M-Pesa',
+    date: '2026-09-20',
+    status: 'Completed',
+  },
+  {
+    id: 'sale-103',
+    customerName: 'Greenwood Heights Site B',
+    customerPhone: '+254 720 119 450',
+    itemsSummary: 'Deformed Bar Y12 (40 pcs), Binding Wire 25kg',
+    amount: 64200,
+    paymentMethod: 'Bank Transfer',
+    date: '2026-09-19',
+    status: 'Completed',
+  },
+  {
+    id: 'sale-104',
+    customerName: 'David Kariuki',
+    customerPhone: '+254 724 550 312',
+    itemsSummary: 'Electrical Conduit 20mm (10 lengths), Sockets & Switches',
+    amount: 7400,
+    paymentMethod: 'Cash',
+    date: '2026-09-18',
+    status: 'Completed',
+  },
+  {
+    id: 'sale-105',
+    customerName: 'Sarah Chebet',
+    customerPhone: '+254 715 678 901',
+    itemsSummary: 'Padlocks 50mm (x6), Door Handles Brass set',
+    amount: 5200,
+    paymentMethod: 'M-Pesa',
+    date: '2026-09-17',
+    status: 'Completed',
+  },
+  {
+    id: 'sale-106',
+    customerName: 'Kilimani Renovation Ltd',
+    customerPhone: '+254 722 334 556',
+    itemsSummary: 'Porcelain Floor Tiles 60x60 (18 boxes), Grout 5kg',
+    amount: 45000,
+    paymentMethod: 'Bank Transfer',
+    date: '2026-09-15',
+    status: 'Completed',
+  },
+];
+
+export const INITIAL_EXPENSES: Expense[] = [
+  {
+    id: 'exp-201',
+    category: 'Rent',
+    description: 'Godown & Shop Rent (Industrial Area / Ngara)',
+    amount: 45000,
+    date: '2026-09-01',
+    paymentMethod: 'Bank Transfer',
+    receiptAttached: true,
+    vendor: 'Kenya Industrial Estates Ltd',
+  },
+  {
+    id: 'exp-202',
+    category: 'Transport',
+    description: 'Pick-up fuel & dispatch delivery to Eastleigh & Westlands',
+    amount: 14500,
+    date: '2026-09-18',
+    paymentMethod: 'M-Pesa',
+    receiptAttached: true,
+    vendor: 'Rubis Energy Service Station',
+  },
+  {
+    id: 'exp-203',
+    category: 'Salaries',
+    description: 'Store keeper & sales clerk mid-month advance',
+    amount: 32000,
+    date: '2026-09-15',
+    paymentMethod: 'M-Pesa',
+    vendor: 'Staff Payroll (Kevin & Grace)',
+  },
+  {
+    id: 'exp-204',
+    category: 'Stock',
+    description: 'Hardware replenishment from Devki Steel Mills',
+    amount: 185000,
+    date: '2026-09-10',
+    paymentMethod: 'Bank Transfer',
+    receiptAttached: true,
+    vendor: 'Devki Steel Mills',
+  },
+  {
+    id: 'exp-205',
+    category: 'Utilities',
+    description: 'Kenya Power Prepaid Token & Nairobi Water bill',
+    amount: 7800,
+    date: '2026-09-08',
+    paymentMethod: 'M-Pesa',
+    receiptAttached: true,
+    vendor: 'KPLC & NCWSC',
+  },
+  {
+    id: 'exp-206',
+    category: 'Marketing',
+    description: 'WhatsApp Business broadcast & Local Facebook promotion',
+    amount: 4500,
+    date: '2026-09-05',
+    paymentMethod: 'M-Pesa',
+    vendor: 'Meta Ads Kenya',
+  },
+];
+
+export const INITIAL_INVOICES: Invoice[] = [
+  {
+    id: 'inv-301',
+    invoiceNumber: 'INV-2026-0042',
+    customerName: 'Greenwood Heights Site B',
+    customerEmail: 'procurement@greenwoodheights.co.ke',
+    customerPhone: '+254 720 119 450',
+    issueDate: '2026-09-15',
+    dueDate: '2026-09-29',
+    items: [
+      { id: 'item-1', description: 'Deformed Steel Bars Y16 (High Tensile)', quantity: 25, unitPrice: 1850, taxable: true },
+      { id: 'item-2', description: 'Ordinary Portland Cement 50kg (Simba)', quantity: 40, unitPrice: 750, taxable: true },
+    ],
+    subtotal: 76250,
+    vatRate: 16,
+    vatAmount: 12200,
+    total: 88450,
+    status: 'Unpaid',
+    paymentInstructions: 'Lipa Na M-Pesa Buy Goods Till: 892104 or KCB Bank Acc: 1102938472 (Mama Njeri Supplies)',
+    notes: 'Please quote INV-2026-0042 in transaction narration for swift eTIMS receipting.',
+  },
+  {
+    id: 'inv-302',
+    invoiceNumber: 'INV-2026-0041',
+    customerName: 'Juma Omondi (Apex Plumbers)',
+    customerPhone: '+254 711 445 221',
+    issueDate: '2026-09-05',
+    dueDate: '2026-09-19',
+    items: [
+      { id: 'item-3', description: 'PPR Water Pipes 25mm Class 20', quantity: 20, unitPrice: 650, taxable: true },
+      { id: 'item-4', description: 'Gate Valves 1 inch Brass', quantity: 8, unitPrice: 1100, taxable: true },
+    ],
+    subtotal: 21800,
+    vatRate: 16,
+    vatAmount: 3488,
+    total: 25288,
+    status: 'Overdue',
+    paymentInstructions: 'Lipa Na M-Pesa Buy Goods Till: 892104',
+    notes: 'Reminder: Invoice overdue since 19th Sep 2026.',
+  },
+  {
+    id: 'inv-303',
+    invoiceNumber: 'INV-2026-0040',
+    customerName: 'Kilimani Renovation Ltd',
+    customerPhone: '+254 722 334 556',
+    issueDate: '2026-09-01',
+    dueDate: '2026-09-15',
+    items: [
+      { id: 'item-5', description: 'Gypsum Boards 9mm Regular', quantity: 30, unitPrice: 780, taxable: true },
+      { id: 'item-6', description: 'Gypsum Screws 1.5 inch (Boxes)', quantity: 5, unitPrice: 650, taxable: true },
+    ],
+    subtotal: 26650,
+    vatRate: 16,
+    vatAmount: 4264,
+    total: 30914,
+    status: 'Paid',
+    paymentInstructions: 'Paid via M-Pesa Ref QK981249A',
+    notes: 'Thank you for your business. eTIMS e-invoice transmitted.',
+  },
+];
+
+export const INITIAL_CUSTOMERS: Customer[] = [
+  {
+    id: 'cust-1',
+    name: 'Juma Omondi (Apex Plumbers)',
+    phone: '+254 711 445 221',
+    email: 'omondi.juma@gmail.com',
+    location: 'Nairobi West / Langata',
+    tag: 'Repeat Customer',
+    totalSpent: 148500,
+    lastPurchaseDate: '2026-09-20',
+    totalOrders: 14,
+    notes: 'Reliable plumber contractor; prefers deliveries on Saturdays morning.',
+  },
+  {
+    id: 'cust-2',
+    name: 'Greenwood Heights Site B',
+    phone: '+254 720 119 450',
+    email: 'procurement@greenwoodheights.co.ke',
+    location: 'Kilimani, Nairobi',
+    tag: 'Wholesale',
+    totalSpent: 382000,
+    lastPurchaseDate: '2026-09-19',
+    totalOrders: 8,
+    notes: 'Site foreman is Eng. Mutua. Needs formal KRA invoice with eTIMS QR.',
+  },
+  {
+    id: 'cust-3',
+    name: 'Amina Hassan',
+    phone: '+254 733 982 101',
+    email: 'amina.hassan@outlook.com',
+    location: 'South C, Nairobi',
+    tag: 'VIP',
+    totalSpent: 74200,
+    lastPurchaseDate: '2026-09-20',
+    totalOrders: 6,
+    notes: 'Renovating residential flats. Regularly buys premium paint and bathroom fixtures.',
+  },
+  {
+    id: 'cust-4',
+    name: 'David Kariuki',
+    phone: '+254 724 550 312',
+    location: 'Rongai, Kajiado',
+    tag: 'New',
+    totalSpent: 7400,
+    lastPurchaseDate: '2026-09-18',
+    totalOrders: 1,
+    notes: 'Referred by Juma. Looking for solar fittings next month.',
+  },
+  {
+    id: 'cust-5',
+    name: 'Mama Brian Tailoring',
+    phone: '+254 712 345 678',
+    location: 'Gikomba, Nairobi',
+    tag: 'Inactive',
+    totalSpent: 28000,
+    lastPurchaseDate: '2026-06-12',
+    totalOrders: 4,
+    notes: 'Has not purchased in 90+ days. Prime candidate for WhatsApp reactivation offer.',
+  },
+];
+
+export const INITIAL_PRODUCTS: Product[] = [
+  {
+    id: 'prod-1',
+    name: 'Bamburi Nguvu Cement 50kg',
+    sku: 'CEM-BAM-50',
+    category: 'Building Materials',
+    purchasePrice: 650,
+    sellingPrice: 780,
+    quantity: 45,
+    minStockLevel: 50, // Low stock!
+    supplier: 'Bamburi Cement Ltd',
+    location: 'Aisle 1 - Warehouse Bay',
+  },
+  {
+    id: 'prod-2',
+    name: 'Dulux Brilliant White Paint 20L',
+    sku: 'PNT-DLX-20W',
+    category: 'Paints & Finishes',
+    purchasePrice: 6900,
+    sellingPrice: 8600,
+    quantity: 4,
+    minStockLevel: 8, // Critical stock!
+    supplier: 'Crown Paints Kenya PLC',
+    location: 'Paints Shelf B2',
+  },
+  {
+    id: 'prod-3',
+    name: 'Deformed Steel Bars Y12 (12m)',
+    sku: 'STL-Y12-12M',
+    category: 'Steel & Metals',
+    purchasePrice: 1100,
+    sellingPrice: 1350,
+    quantity: 110,
+    minStockLevel: 40, // Healthy stock
+    supplier: 'Devki Steel Mills',
+    location: 'Open Yard Bay 4',
+  },
+  {
+    id: 'prod-4',
+    name: 'PPR Water Pipe 25mm Class 20',
+    sku: 'PLM-PPR-25',
+    category: 'Plumbing',
+    purchasePrice: 480,
+    sellingPrice: 650,
+    quantity: 75,
+    minStockLevel: 30, // Healthy stock
+    supplier: 'Doshis Hardware',
+    location: 'Pipe Rack A',
+  },
+  {
+    id: 'prod-5',
+    name: 'Brass Padlock Heavy Duty 50mm',
+    sku: 'SEC-PAD-50B',
+    category: 'Security & Fasteners',
+    purchasePrice: 520,
+    sellingPrice: 750,
+    quantity: 12,
+    minStockLevel: 20, // Low stock
+    supplier: 'Tri-Star Hardware Supplies',
+    location: 'Counter Display C',
+  },
+  {
+    id: 'prod-6',
+    name: 'LED Floodlight 50W IP65 Outdoor',
+    sku: 'ELE-FLD-50W',
+    category: 'Electricals',
+    purchasePrice: 1400,
+    sellingPrice: 2200,
+    quantity: 28,
+    minStockLevel: 10,
+    supplier: 'Mabati Rolling Mills / Electricals',
+    location: 'Electrical Shelf E',
+  },
+];
+
+export const INITIAL_SUPPLIERS: Supplier[] = [
+  {
+    id: 'sup-1',
+    name: 'Devki Steel Mills',
+    phone: '+254 20 690 4000',
+    email: 'sales@devkigroup.com',
+    productsSupplied: 'Deformed Bars, Binding Wire, BRC Mesh',
+    totalPurchases: 450000,
+    outstandingBalance: 65000,
+    notes: 'Delivers orders above KSh 200,000 free to Nairobi CBD/Industrial Area.',
+  },
+  {
+    id: 'sup-2',
+    name: 'Crown Paints Kenya PLC',
+    phone: '+254 709 887 000',
+    email: 'orders@crownpaints.co.ke',
+    productsSupplied: 'Emulsion, Gloss Paint, Undercoat, Thinners',
+    totalPurchases: 220000,
+    outstandingBalance: 18000,
+    notes: 'Offers dealer discount when paid within 14 days.',
+  },
+  {
+    id: 'sup-3',
+    name: 'Bamburi Cement Ltd',
+    phone: '+254 20 289 3000',
+    email: 'customerservice@bamburi.lafarge.com',
+    productsSupplied: 'Nguvu 32.5R, PowerMax 42.5N',
+    totalPurchases: 380000,
+    outstandingBalance: 0,
+    notes: 'Direct distributor account in good standing.',
+  },
+];
+
+export const COMPLIANCE_TASKS: ComplianceTask[] = [
+  {
+    id: 'comp-1',
+    title: 'KRA Monthly VAT Return (eTIMS Reconciliation)',
+    authority: 'KRA',
+    dueDate: '2026-10-20',
+    dueInDays: 29,
+    description: 'File monthly VAT return by the 20th day of following month. Reconcile electronic invoices with eTIMS transmission logs.',
+    status: 'Pending',
+    actionUrl: 'https://itax.kra.go.ke',
+  },
+  {
+    id: 'comp-2',
+    title: 'PAYE & Housing Levy Remittance',
+    authority: 'KRA',
+    dueDate: '2026-10-09',
+    dueInDays: 18,
+    description: 'Remit employee PAYE and Affordable Housing Levy (1.5% employee + 1.5% employer) via KRA iTax payment slip.',
+    status: 'Pending',
+    actionUrl: 'https://itax.kra.go.ke',
+  },
+  {
+    id: 'comp-3',
+    title: 'NSSF Monthly Contributions Remittance',
+    authority: 'NSSF',
+    dueDate: '2026-10-09',
+    dueInDays: 18,
+    description: 'Submit Tier I and Tier II pension contributions for registered staff to avoid statutory interest penalties.',
+    status: 'Pending',
+    actionUrl: 'https://nssf.or.ke',
+  },
+  {
+    id: 'comp-4',
+    title: 'Nairobi City County Single Business Permit (SBP)',
+    authority: 'County Government',
+    dueDate: '2026-12-31',
+    dueInDays: 101,
+    description: 'Ensure current year business permit is visibly displayed on shop premises. Renewal opens Dec 1st via Nairobi eServices.',
+    status: 'Completed',
+  },
+];
+
+export const NEWS_ARTICLES: NewsArticle[] = [
+  {
+    id: 'news-1',
+    title: 'KRA Updates eTIMS Exemption Guidelines for Micro-Traders Under KSh 5M',
+    category: 'Tax & KRA',
+    date: '2026-09-18',
+    summary: 'The Kenya Revenue Authority has released revised practical guidance regarding simplified eTIMS onboarding through the USSD (*222#) and mobile app for small informal businesses.',
+    fullText: 'The Kenya Revenue Authority (KRA) clarified that small enterprises with annual turnover below KSh 5 Million can utilize the streamlined eTIMS Lite platform on basic feature phones. Business owners can generate validated tax invoices without purchasing expensive electronic signature hardware. The move aims to bring millions of dukas and service providers into compliance smoothly.',
+    source: 'Business Daily Africa',
+    originalUrl: 'https://www.businessdailyafrica.com',
+    whatItMeans: {
+      whatHappened: 'KRA introduced easier mobile USSD and web e-invoicing for micro-retailers without requiring physical hardware.',
+      whoIsAffected: 'All Kenyan SMEs, hardware shops, dukas, and contractors selling goods or services to individuals or other businesses.',
+      whatShouldYouDo: 'Ensure your business details are registered on eTIMS Lite. BizHubKE allows you to generate invoices that comply with KRA record-keeping standards.',
+      deadline: 'Ongoing enforcement; all B2B and business deductions require valid eTIMS invoices.',
+    },
+  },
+  {
+    id: 'news-2',
+    title: 'Central Bank of Kenya Launches Interoperable QR Codes for M-Pesa and Banks',
+    category: 'Finance & Banking',
+    date: '2026-09-14',
+    summary: 'Kenyan retailers can now display a single standardized KE-QR code enabling payments from any bank app, M-Pesa, Airtel Money, or card without extra POS hardware.',
+    fullText: 'In a significant boost for merchants across Kenya, the Central Bank of Kenya announced full national rollout of the standardized merchant QR payment framework. Small retailers previously had to maintain separate paybills, bank till numbers, and cards. Customers can now scan one unified QR code regardless of their banking institution.',
+    source: 'The Standard Kenya',
+    originalUrl: 'https://www.standardmedia.co.ke',
+    whatItMeans: {
+      whatHappened: 'CBK standardized retail payments into one universal QR code accepting all banks and mobile money.',
+      whoIsAffected: 'Storefront retailers, cafes, wholesale distributors, and service businesses.',
+      whatShouldYouDo: 'Download your unified merchant QR from your primary bank or Safaricom Business portal and display it prominently on your checkout counter.',
+    },
+  },
+  {
+    id: 'news-3',
+    title: 'Government Opens KSh 2.5B SME Revolving Fund for Women & Youth Enterprises',
+    category: 'Funding',
+    date: '2026-09-10',
+    summary: 'The Ministry of Cooperatives and MSME Development announced low-interest credit lines (6% p.a.) disbursed through participating local SACCOs and micro-financiers.',
+    fullText: 'Kenyan business owners registered as sole proprietorships or limited companies can now apply for working capital loans ranging from KSh 50,000 to KSh 1,500,000. Priority is given to businesses showing organized digital sales and inventory records over the previous 6 months.',
+    source: 'Capital FM Kenya',
+    originalUrl: 'https://www.capitalfm.co.ke',
+    whatItMeans: {
+      whatHappened: 'Low-interest working capital facility announced for registered SMEs with verifiable book records.',
+      whoIsAffected: 'Kenyan registered businesses operating for over 6 months.',
+      whatShouldYouDo: 'Export your 6-month BizHubKE Sales & Profit report to attach to your SACCO loan application.',
+      deadline: 'Applications evaluated on a rolling basis until Dec 2026.',
+    },
+  },
+];
+
+export const TRAINING_COURSES: TrainingCourse[] = [
+  {
+    id: 'course-1',
+    title: 'Mastering Cash Flow & Working Capital for Kenyan SMEs',
+    category: 'Business Finance',
+    level: 'Beginner',
+    duration: '35 mins',
+    lessonsCount: 4,
+    lessons: [
+      {
+        id: 'c1-l1',
+        title: 'Why Cash Flow Matters More Than Paper Profit',
+        duration: '8 mins',
+        content: 'Profit is what you book when you make a sale; cash flow is what is actually sitting in your M-Pesa Till or bank account today. Many Kenyan dukas and contractors show great monthly sales on paper, but find themselves unable to pay godown rent or restock because customer balances ("deni") are delayed. Learn the working capital cycle formula: Inventory Days + Receivables Days - Payables Days.',
+      },
+      {
+        id: 'c1-l2',
+        title: 'Managing "Deni" and Customer Credit Effectively',
+        duration: '10 mins',
+        content: 'Credit can grow your sales, but unmanaged credit can kill your business. Set clear credit limits: never give a customer credit exceeding 20% of their average monthly purchase. Always issue a formal dated invoice with an explicit due date. Use automated WhatsApp reminders 3 days before due date, on the due date, and 2 days after.',
+      },
+      {
+        id: 'c1-l3',
+        title: 'Separating Personal Money from Business M-Pesa',
+        duration: '9 mins',
+        content: 'The most common mistake by Kenyan entrepreneurs is using their personal Safaricom number for both customer payments and family household expenses. Open a designated Lipa Na M-Pesa Buy Goods Till or Pochi la Biashara. Pay yourself a fixed monthly salary instead of withdrawing directly for daily pocket money.',
+      },
+      {
+        id: 'c1-l4',
+        title: 'Building a 30-Day Cash Flow Projection',
+        duration: '8 mins',
+        content: 'Every Monday morning, calculate your opening cash balance, expected customer collections, and mandatory upcoming outflows (rent, payroll, supplier invoices, taxes). Identify cash shortfall weeks before they occur so you can accelerate collections or negotiate supplier payment extensions.',
+      },
+    ],
+    quiz: [
+      {
+        question: 'What is the primary danger of selling goods on credit without formal tracking?',
+        options: [
+          'It makes your store look too busy',
+          'Cash is locked up in unpaid invoices while supplier bills and rent become overdue',
+          'KRA charges higher taxes on credit sales',
+          'Banks do not accept payments made after 30 days',
+        ],
+        correctIndex: 1,
+        explanation: 'Uncollected debt dries up your liquid cash needed for everyday restock and overheads.',
+      },
+      {
+        question: 'How should a business owner handle personal withdrawals?',
+        options: [
+          'Withdraw directly from the customer M-Pesa till whenever needed',
+          'Pay yourself a defined, budgeted salary from business profits',
+          'Never take any money home from the business',
+          'Charge personal food and fuel as business expenses without receipts',
+        ],
+        correctIndex: 1,
+        explanation: 'Paying yourself a fixed salary ensures business working capital remains intact and financial reports remain accurate.',
+      },
+    ],
+  },
+  {
+    id: 'course-2',
+    title: 'Selling and Retaining Customers on WhatsApp Business',
+    category: 'WhatsApp Business',
+    level: 'Intermediate',
+    duration: '40 mins',
+    lessonsCount: 3,
+    lessons: [
+      {
+        id: 'c2-l1',
+        title: 'Optimizing Your WhatsApp Business Profile & Catalog',
+        duration: '12 mins',
+        content: 'In Kenya, WhatsApp is the primary digital storefront. Set your business hours, physical shop location, verified email, and link your product catalog with clear KES pricing. Customers hate having to message "DM for price" — transparency builds instant credibility.',
+      },
+      {
+        id: 'c2-l2',
+        title: 'High-Converting Broadcasts & Message Etiquette',
+        duration: '15 mins',
+        content: 'Never spam your customer contacts with daily generic broadcasts. Segment your audience: VIPs who buy weekly, wholesale builders, and inactive clients. Send curated offers on payday weeks (end of month) with specific photos and direct M-Pesa till payment details.',
+      },
+      {
+        id: 'c2-l3',
+        title: 'Automating Customer Inquiries and Order Status',
+        duration: '13 mins',
+        content: 'Set quick replies for frequently asked questions (e.g. delivery fee within Nairobi CBD, payment options, shop location directions). When an order is dispatched via motorbike or pickup, send instant confirmation.',
+      },
+    ],
+    quiz: [
+      {
+        question: 'Why is displaying clear KES prices in your WhatsApp catalog better than saying "DM for price"?',
+        options: [
+          'It satisfies KRA requirements',
+          'It builds buyer trust, eliminates friction, and speeds up purchasing decisions',
+          'WhatsApp bans accounts that do not show prices',
+          'Competitors cannot see your prices on WhatsApp',
+        ],
+        correctIndex: 1,
+        explanation: 'Transparency builds trust with Kenyan buyers and removes the friction of waiting for DM replies.',
+      },
+    ],
+  },
+  {
+    id: 'course-3',
+    title: 'eTIMS & Small Business Tax Compliance in Kenya',
+    category: 'Tax & Compliance',
+    level: 'Beginner',
+    duration: '30 mins',
+    lessonsCount: 3,
+    lessons: [
+      {
+        id: 'c3-l1',
+        title: 'Demystifying eTIMS: Who Needs It and How It Works',
+        duration: '10 mins',
+        content: 'Electronic Tax Invoice Management System (eTIMS) allows KRA to validate transactions in real-time. Any business claiming expenses in their tax return must have an eTIMS invoice from their supplier. Even small businesses need eTIMS so their corporate and registered clients can buy from them.',
+      },
+      {
+        id: 'c3-l2',
+        title: 'Understanding VAT (16%), Turnover Tax (TOT), and Income Tax',
+        duration: '10 mins',
+        content: 'Businesses with turnover above KSh 5M must register for VAT (16%). For smaller businesses below KSh 5M, Turnover Tax (TOT) at 3% of gross sales is often applicable unless exempt. Learn how to record tax inclusive vs exclusive pricing.',
+      },
+      {
+        id: 'c3-l3',
+        title: 'Avoiding KRA Penalties: Key Filing Dates Every Month',
+        duration: '10 mins',
+        content: 'Mark these dates on your wall calendar: 9th of every month (PAYE, Affordable Housing Levy, NSSF); 20th of every month (VAT). Filing early avoids last-minute iTax server congestion.',
+      },
+    ],
+    quiz: [
+      {
+        question: 'What is the standard filing deadline for monthly VAT returns in Kenya?',
+        options: [
+          'End of the month',
+          'The 9th of the following month',
+          'The 20th of the following month',
+          'Every Friday',
+        ],
+        correctIndex: 2,
+        explanation: 'KRA requires VAT returns and payment to be completed by the 20th day of the succeeding month.',
+      },
+    ],
+  },
+];
+
+export const OPPORTUNITIES: Opportunity[] = [
+  {
+    id: 'opp-1',
+    title: 'Youth Enterprise Development Fund (YEDF) — Vuka Loan',
+    organization: 'Ministry of Youth Affairs, Creative Economy & Sports',
+    category: 'Government Program',
+    deadline: '2026-11-30',
+    amountOrBenefit: 'Up to KSh 2,000,000 at 6% p.a.',
+    eligibility: 'Kenyan business owners aged 18–35 with registered enterprise',
+    location: 'All 47 Counties (via Sub-County offices)',
+    description: 'Expansion loan for established youth-owned businesses with minimum 1-year track record. Requires audited or recorded sales books, valid tax compliance certificate, and two guarantors.',
+    applicationLink: 'https://youthfund.go.ke',
+    saved: true,
+  },
+  {
+    id: 'opp-2',
+    title: 'Hustler Fund MSME Facility (Group & Individual Tier 2)',
+    organization: 'State Department for MSME Development',
+    category: 'Funding',
+    deadline: '2026-12-31',
+    amountOrBenefit: 'KSh 100,000 – KSh 1,000,000',
+    eligibility: 'SMEs registered on e-Citizen with clean credit history',
+    location: 'National',
+    description: 'Digital loan disbursed to business Till/Account at subsidized rates for working capital, stock procurement, and machinery leasing.',
+    applicationLink: 'https://hustlerfund.go.ke',
+    saved: false,
+  },
+  {
+    id: 'opp-3',
+    title: 'Kenya Climate Innovation Center (KCIC) Agribusiness Grant',
+    organization: 'KCIC & European Union',
+    category: 'Grant',
+    deadline: '2026-10-15',
+    amountOrBenefit: 'KSh 1,500,000 – KSh 5,000,000 Non-Dilutive Grant',
+    eligibility: 'SMEs in agri-processing, clean energy, waste management, or water conservation',
+    location: 'Kenya',
+    description: 'Funding and 12-month mentorship for green Kenyan enterprises seeking to scale production and expand export or regional distribution.',
+    applicationLink: 'https://kenyacic.org',
+    saved: true,
+  },
+  {
+    id: 'opp-4',
+    title: 'AGPO (Access to Government Procurement Opportunities) Certification',
+    organization: 'The National Treasury of Kenya',
+    category: 'Tender',
+    deadline: 'Continuous Enrollment',
+    amountOrBenefit: '30% of all Government Tenders reserved for Youth, Women & PWDs',
+    eligibility: 'Enterprises owned at least 70% by youth, women, or persons with disabilities',
+    location: 'Kenya',
+    description: 'Pre-qualification certificate enabling your company to bid for County, Ministry, and State Parastatal tenders for supply of goods, hardware, stationery, and consultancy.',
+    applicationLink: 'https://agpo.go.ke',
+    saved: false,
+  },
+];
+
+export const MESSAGE_TEMPLATES: MessageTemplate[] = [
+  {
+    id: 'tpl-1',
+    title: 'Order Confirmation & M-Pesa Receipt',
+    category: 'Order Confirmation',
+    templateText: `Habari {{Customer_Name}}! Thank you for ordering from {{Business_Name}}. 
+Your order for {{Items_Summary}} totaling KSh {{Amount}} has been received and packed.
+Please pay via Lipa na M-Pesa Buy Goods Till: {{Till_Number}}.
+We will notify you immediately once dispatched! For inquiries call us on {{Phone}}.`,
+  },
+  {
+    id: 'tpl-2',
+    title: 'Polite Payment Reminder for Invoice',
+    category: 'Payment Reminder',
+    templateText: `Jambo {{Customer_Name}}, warm greetings from {{Business_Name}}. 
+This is a gentle reminder regarding Invoice {{Invoice_Number}} for KSh {{Amount}}, which is due on {{Due_Date}}.
+Kindly settle via Lipa na M-Pesa Till: {{Till_Number}} or Bank Transfer. If already paid, please ignore this notice. Asante sana!`,
+  },
+  {
+    id: 'tpl-3',
+    title: 'Thank You & Customer Care Feedback',
+    category: 'Thank You',
+    templateText: `Asante sana {{Customer_Name}} for shopping with {{Business_Name}} today! 
+We hope you loved your items. How was your service experience? Please reply with 1 (Excellent) to 5 (Needs Improvement). Your support empowers our local business!`,
+  },
+  {
+    id: 'tpl-4',
+    title: 'Payday End-of-Month Special Promotion',
+    category: 'Promotion',
+    templateText: `🌟 End-of-Month Special at {{Business_Name}}! 
+Enjoy up to 15% OFF on our best-selling building supplies & paints this weekend. 
+🚚 Free delivery within Nairobi CBD for all orders above KSh 20,000. 
+Reply "DEAL" to view our special catalog on WhatsApp!`,
+  },
+  {
+    id: 'tpl-5',
+    title: 'Reactivation for Inactive Customers',
+    category: 'Reactivation',
+    templateText: `Habari {{Customer_Name}}! We noticed it has been a while since your last visit to {{Business_Name}}. We have just restocked fresh inventory that you will love. 
+As a valued client, here is an exclusive KSh 1,000 voucher on your next purchase above KSh 10,000 this week. Karibu tena!`,
+  },
+];
+
+export const MOCK_BUSINESS_SCORE: BusinessScoreBreakdown = {
+  overallScore: 72,
+  financialHealth: 78,
+  customerManagement: 75,
+  operations: 68,
+  marketing: 62,
+  compliance: 80,
+  biggestOpportunity: 'Customer retention and marketing follow-ups: 18% of your previous buyers have not purchased in over 60 days.',
+  recommendations: [
+    'Send an automated WhatsApp reactivation message to inactive customers offering free delivery or 5% discount.',
+    'Restock Bamburi Cement and Dulux White Paint immediately — current quantities are below your safety buffer.',
+    'Follow up on Invoice INV-2026-0041 (KSh 25,288) which is overdue by 2 days.',
+    'Prepare your KRA VAT reconciliation 3 days ahead of the October 20th deadline to avoid iTax traffic.',
+  ],
+};
+
+// Convenience alias exports
+export const MOCK_TENANT = DEMO_TENANT;
+export const MOCK_SALES = INITIAL_SALES;
+export const MOCK_EXPENSES = INITIAL_EXPENSES;
+export const MOCK_INVOICES = INITIAL_INVOICES;
+export const MOCK_CUSTOMERS = INITIAL_CUSTOMERS;
+export const MOCK_PRODUCTS = INITIAL_PRODUCTS;
+export const MOCK_SUPPLIERS = INITIAL_SUPPLIERS;
+export const MOCK_COMPLIANCE_TASKS = COMPLIANCE_TASKS;
+export const MOCK_NEWS = NEWS_ARTICLES;
+export const MOCK_TRAINING_COURSES = TRAINING_COURSES;
+export const MOCK_OPPORTUNITIES = OPPORTUNITIES;
+

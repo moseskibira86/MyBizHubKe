@@ -1,0 +1,6 @@
+{
+  "name": "BizHubKE",
+  "description": "The Digital Business Partner for Kenyan SMEs - All-in-one platform for sales, invoicing, inventory, WhatsApp CRM, KRA compliance, and AI business advisory.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
