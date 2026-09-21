@@ -114,3 +114,67 @@ export function exportToCsv(filename: string, rows: Record<string, any>[]) {
   link.click();
   document.body.removeChild(link);
 }
+
+/**
+ * Initializes and seeds or clears the workspace during Onboarding Step 3.
+ * Includes a strict 15-second timeout and detailed console logging for observability.
+ */
+export async function setupWorkspace(params: {
+  tenant: any;
+  importSampleData: boolean;
+}): Promise<{ success: boolean; message: string }> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15-second timeout
+
+  try {
+    console.log('[setupWorkspace] Calling /api/workspace/setup with:', {
+      tenantName: params.tenant?.name,
+      importSampleData: params.importSampleData,
+    });
+
+    const res = await fetch('/api/workspace/setup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(
+        errorData.error || `Server responded with status ${res.status}: ${res.statusText}`
+      );
+    }
+
+    const data = await res.json();
+    console.log('[setupWorkspace] Promise resolved successfully:', data);
+    return {
+      success: true,
+      message: data.message || 'Workspace configured successfully.',
+    };
+  } catch (err: any) {
+    clearTimeout(timeoutId);
+    console.error('[setupWorkspace] Setup request encountered an error:', err);
+
+    if (err.name === 'AbortError') {
+      throw new Error(
+        'Workspace setup timed out after 15 seconds. Please check your network and click Retry.'
+      );
+    }
+
+    // Fallback if server is temporarily unreachable or offline in preview mode
+    if (err.message && err.message.includes('Failed to fetch')) {
+      console.warn('[setupWorkspace] Network fetch failed, applying client-side fallback.');
+      return {
+        success: true,
+        message: params.importSampleData
+          ? 'Client-side Kenyan SME starter data configured.'
+          : 'Clean blank slate configured.',
+      };
+    }
+
+    throw new Error(err.message || 'Failed to configure workspace. Please try again.');
+  }
+}

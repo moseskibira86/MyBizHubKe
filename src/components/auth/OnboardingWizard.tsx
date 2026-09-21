@@ -12,8 +12,12 @@ import {
   Sparkles,
   ShieldCheck,
   FileCheck,
+  Loader2,
+  AlertCircle,
+  RefreshCw,
 } from 'lucide-react';
 import { BusinessTenant, County, BusinessCategory } from '../../types';
+import { setupWorkspace } from '../../services/api';
 
 interface OnboardingWizardProps {
   onComplete: (tenantData: BusinessTenant, importSampleData: boolean) => void;
@@ -85,14 +89,64 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete, 
     'retention',
   ]);
 
-  // Step 3: Data Import preference
+  // Step 3: Data Import preference & async workspace configuration state
   const [importSampleData, setImportSampleData] = useState<boolean>(true);
+  const [isSettingUpWorkspace, setIsSettingUpWorkspace] = useState<boolean>(false);
+  const [setupError, setSetupError] = useState<string | null>(null);
 
   const toggleChallenge = (id: string) => {
     if (selectedChallenges.includes(id)) {
       setSelectedChallenges(selectedChallenges.filter((c) => c !== id));
     } else {
       setSelectedChallenges([...selectedChallenges, id]);
+    }
+  };
+
+  const handleSetupStep3 = async () => {
+    setIsSettingUpWorkspace(true);
+    setSetupError(null);
+
+    const tempTenant: BusinessTenant = {
+      id: `tenant-${Date.now()}`,
+      name: businessName || 'My Kenyan Business',
+      ownerName: ownerName || 'Business Owner',
+      email: email || 'owner@bizhubke.com',
+      phone: phone || '+254 700 000 000',
+      county,
+      category,
+      employeeCount,
+      monthlySalesRange,
+      kraPin: kraPin || undefined,
+      mpesaTill: mpesaTill || undefined,
+      plan: 'Business',
+      isTrial: true,
+      trialDaysLeft: 7,
+      currency: 'KSh',
+      isDemo: false,
+      score: 75,
+    };
+
+    console.log('[Onboarding Step 3] Initiating workspace setup...', {
+      importSampleData,
+      businessName: tempTenant.name,
+      county: tempTenant.county,
+    });
+
+    try {
+      // Calls async setup endpoint with timeout and resilience
+      const res = await setupWorkspace({
+        tenant: tempTenant,
+        importSampleData,
+      });
+      console.log('[Onboarding Step 3] Setup resolved successfully. Transitioning to Step 4:', res);
+      // Reliably navigate to Step 4
+      setStep(4);
+    } catch (err: any) {
+      console.error('[Onboarding Step 3] Setup error encountered:', err);
+      setSetupError(err?.message || 'Configuration request failed or timed out. Please retry.');
+    } finally {
+      // Guarantee loading state is always reset
+      setIsSettingUpWorkspace(false);
     }
   };
 
@@ -356,16 +410,19 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete, 
         {step === 3 && (
           <div className="p-6 sm:p-8 space-y-5">
             <div>
-              <h3 className="text-xl font-bold text-slate-900">Set Up Your Initial Workspace</h3>
+              <h3 className="text-xl font-bold text-slate-900">How would you like to start?</h3>
               <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                Choose whether to start with pre-loaded realistic Kenyan SME demo records or a clean blank slate.
+                Choose how to configure your initial Kenyan business workspace.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div
-                onClick={() => setImportSampleData(true)}
-                className={`p-5 rounded-2xl border-2 cursor-pointer transition-all space-y-2 ${
+                id="onboarding-option-sample-data"
+                onClick={() => !isSettingUpWorkspace && setImportSampleData(true)}
+                className={`p-5 rounded-2xl border-2 transition-all space-y-2 ${
+                  isSettingUpWorkspace ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'
+                } ${
                   importSampleData
                     ? 'border-[#0F7A4C] bg-[#E8F7EF]'
                     : 'border-slate-200 hover:border-slate-300 bg-white'
@@ -383,15 +440,18 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete, 
                     {importSampleData && <CheckCircle2 className="w-3.5 h-3.5" />}
                   </div>
                 </div>
-                <h4 className="text-sm font-bold text-slate-900">Load Starter Kenyan Records</h4>
+                <h4 className="text-sm font-bold text-slate-900">Load Kenyan SME Sample Data</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Includes sample sales (Bamburi cement, Crown paints, Juma Omondi), expenses, eTIMS VAT invoices, supplier balances, and WhatsApp templates.
+                  Includes realistic Kenyan sales (Crown Paints, Bamburi Cement, M-Pesa receipts), expense logs, eTIMS VAT invoices, supplier balances, and WhatsApp CRM message templates.
                 </p>
               </div>
 
               <div
-                onClick={() => setImportSampleData(false)}
-                className={`p-5 rounded-2xl border-2 cursor-pointer transition-all space-y-2 ${
+                id="onboarding-option-blank-workspace"
+                onClick={() => !isSettingUpWorkspace && setImportSampleData(false)}
+                className={`p-5 rounded-2xl border-2 transition-all space-y-2 ${
+                  isSettingUpWorkspace ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'
+                } ${
                   !importSampleData
                     ? 'border-[#0F7A4C] bg-[#E8F7EF]'
                     : 'border-slate-200 hover:border-slate-300 bg-white'
@@ -407,7 +467,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete, 
                     {!importSampleData && <CheckCircle2 className="w-3.5 h-3.5" />}
                   </div>
                 </div>
-                <h4 className="text-sm font-bold text-slate-900">Empty Workspace</h4>
+                <h4 className="text-sm font-bold text-slate-900">Start with Clean Blank Workspace</h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   Start with clean 0 KSh figures and enter your own real products, customers, and expenses from scratch.
                 </p>
@@ -419,20 +479,72 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete, 
               <span>You can reset or edit data at any time from your Business Settings.</span>
             </div>
 
+            {/* Error & Timeout Resilience Banner */}
+            {setupError && (
+              <div
+                id="onboarding-step3-error-banner"
+                className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2.5"
+              >
+                <div className="flex items-start gap-2.5">
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-bold text-rose-900">Configuration Notice</p>
+                    <p className="text-rose-700 leading-relaxed">{setupError}</p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleSetupStep3}
+                    className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" /> Retry Setup
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSetupError(null);
+                      setStep(4);
+                    }}
+                    className="px-3.5 py-1.5 bg-white border border-rose-300 text-rose-800 hover:bg-rose-100 font-semibold rounded-lg transition-colors cursor-pointer"
+                  >
+                    Proceed to Step 4 anyway →
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="pt-4 flex items-center justify-between border-t border-slate-200">
               <button
                 type="button"
+                disabled={isSettingUpWorkspace}
                 onClick={() => setStep(2)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1"
+                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" /> Back
               </button>
               <button
+                id="onboarding-step3-cta-btn"
                 type="button"
-                onClick={() => setStep(4)}
-                className="px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-slate-950 bg-[#F5B400] hover:bg-[#d99f00] flex items-center gap-2 shadow"
+                disabled={isSettingUpWorkspace}
+                onClick={handleSetupStep3}
+                className={`px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-slate-950 flex items-center gap-2 shadow transition-all ${
+                  isSettingUpWorkspace
+                    ? 'bg-[#F5B400]/70 cursor-wait'
+                    : 'bg-[#F5B400] hover:bg-[#d99f00] cursor-pointer'
+                }`}
               >
-                Generate My Dashboard <ArrowRight className="w-4 h-4" />
+                {isSettingUpWorkspace ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-slate-900" />
+                    <span>Configuring your workspace...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Configure & Continue to Step 4</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </div>
           </div>
